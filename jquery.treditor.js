@@ -11,7 +11,8 @@
 			width:	500,
 			height: 250,
 			buttonbar: "bold italic strikethrough | unorderedlist orderedlist | alignleft aligncenter alignright | link image | source",
-			bodyStyle: "margin:4px; font:10pt Arial,Verdana; cursor:text"
+			bodyStyle: "margin:4px; font:10pt Arial,Verdana; cursor:text",
+			placeholderStyle: "color: #a1a1a1;"
 		},
 		buttons :
 		{
@@ -198,9 +199,20 @@
 		editor.frame.width(wid).height(200);
 		editor.area.width(wid).height(200);
 
+		var focusFn = function() {
+			if ($(editor.doc.body).text() == editor.area.attr('placeholder')) {
+				$(editor.doc.body).html('');
+			}
+		}
 		try {
-			if (isIE) editor.doc.body.contentEditable = true;
-			else editor.doc.designMode = 'on';
+			if (isIE) {
+				editor.doc.body.contentEditable = true;
+				$(editor.doc.body).focus(focusFn);
+			} else {
+				editor.doc.designMode = 'on';
+				$(editor.doc).focus(focusFn);
+		}
+			updateTextArea(editor);
 		}
 		catch(e) {
 		}
@@ -240,7 +252,10 @@
 	}
 	
 	function updateTextArea(editor) {
-		
+		if ($(editor.doc.body).text() == '' || $(editor.doc.body).text() == editor.area.attr('placeholder')) {
+			editor.area.val('');
+			$(editor.doc.body).html('<span style="' + editor.settings.placeholderStyle + '">' + editor.area.attr('placeholder') + '</span>');
+		} else {
 		var html = $(editor.doc.body).html();					
 		editor.area.val(html);		
 	}
