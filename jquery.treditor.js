@@ -44,6 +44,7 @@
 	//Private Variables	
 	///////////////////////
 	var isIE = $.browser.msie;
+	var isMoz = $.browser.mozilla;
 	
 	
 	///////////////////////
@@ -205,13 +206,16 @@
 			}
 		}
 		try {
-			if (isIE) {
+			if (isIE) 
 				editor.doc.body.contentEditable = true;
-				$(editor.doc.body).focus(focusFn);
-			} else {
+			else 
 				editor.doc.designMode = 'on';
+
+			if (isMoz)
 				$(editor.doc).focus(focusFn);
-		}
+			else
+				$(editor.doc.body).focus(focusFn);
+
 			updateTextArea(editor);
 		}
 		catch(e) {
